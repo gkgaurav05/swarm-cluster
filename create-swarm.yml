@@ -1,0 +1,15 @@
+#- hosts: docker-swarm
+#  become: yes
+#  name: Install Docker
+#  roles:
+#  - docker-installation
+
+- hosts: swarm-leader
+  name: Initialize docker swarm
+  roles:
+  - docker-swarm-init
+
+- hosts: swarm-managers
+  name: Add manager node to the swarm
+  roles:
+  - add-manager-node

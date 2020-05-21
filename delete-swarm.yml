@@ -1,0 +1,4 @@
+- hosts: swarm-nodes
+  name: managers leave the swarm
+  roles:
+    - docker-swarm-leave

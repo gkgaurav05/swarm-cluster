@@ -1,0 +1,39 @@
+---
+# tasks file for docker-installation
+- name: Install docker package
+  apt:
+    name: "{{ item }}"
+    state: present
+    update_cache: yes
+  become: yes
+  with_items:
+      - apt-transport-https
+      - ca-certificates
+      - curl
+      - software-properties-common
+- name: Add Docker official GPG Keys
+  apt_key:
+    url: https://download.docker.com/linux/ubuntu/gpg
+    state: present
+
+- name: Verify that we have the key with the fingerprint
+  apt_key: 
+    id: 0EBFCD88
+    state: present
+
+- name: Ddd Docker packages to Repository
+  apt_repository:
+    repo: deb [arch=amd64] https://download.docker.com/linux/ubuntu {{ ansible_lsb.codename|lower }} stable
+
+- name: Install Docker-CE
+  apt:
+    name: docker-ce=5:19.03.*
+    state: present
+    update_cache: yes 
+
+- name: Add user to docker group
+  user: 
+    name: ubuntu
+    append: yes
+    groups: docker
+

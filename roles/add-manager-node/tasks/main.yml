@@ -1,0 +1,13 @@
+---
+# tasks file for add-manager-node
+- name: check the manager token
+  debug:
+    var: manager_token
+- name: Check if Swarm is Already Initialized
+  shell: docker node ls
+  register: swarm_status
+  ignore_errors: true
+
+- name: Add Managers to the Swarm
+  shell: "docker swarm join --token {{ hostvars['172.31.31.171']['manager_token']['stdout'] }} {{ hostvars['172.31.31.171']['ansible_default_ipv4']['address'] }}:2377"
+  when: swarm_status.rc != 0
